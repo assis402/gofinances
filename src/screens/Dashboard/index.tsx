@@ -12,7 +12,7 @@ import {
     UserGreeting,
     UserName,
     Power,
-    HighlghtCards,
+    HighlightCards,
     Transactions,
     Title
 } from './styles'
@@ -34,7 +34,7 @@ export function DashBoard(){
                     <Power name="power"/>
                 </UserWrapper>
             </Header>
-            <HighlghtCards>
+            <HighlightCards>
                 <HighlightCard 
                     type='income' 
                     amount='R$ 17.400,00' 
@@ -50,7 +50,7 @@ export function DashBoard(){
                     amount='R$ 16.141,00' 
                     lastTransaction='01 à 16 de abril'
                 />
-            </HighlghtCards>
+            </HighlightCards>
 
             <Transactions>
                 <Title>Listagem</Title>

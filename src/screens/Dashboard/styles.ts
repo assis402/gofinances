@@ -62,7 +62,7 @@ export const Power = styled(Feather)`
     font-size: ${RFValue(24)}px;
 `
 
-export const HighlghtCards = styled.ScrollView.attrs({
+export const HighlightCards = styled.ScrollView.attrs({
     horizontal: true,
     showsHorizontalScrollIndicator: false,
     contentContainerStyle: { paddingLeft: 24 } 
@@ -71,7 +71,10 @@ export const HighlghtCards = styled.ScrollView.attrs({
     position: absolute;
     margin-top: ${RFPercentage(20)}px;
 `
-export const Transactions = styled.View`
+export const Transactions = styled.ScrollView.attrs({
+    showsHorizontalScrollIndicator: false,
+    contentContainerStyle: { paddingBottom: 16 } 
+})`
     flex: 1;
     padding: 0 24px;
     margin-top: ${RFPercentage(12)}px;
@@ -80,5 +83,5 @@ export const Transactions = styled.View`
 export const Title = styled.Text`
     font-size: ${RFValue(18)}px;
     font-family: ${({theme}) => theme.fonts.regular};
-    
+
 `
