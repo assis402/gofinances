@@ -11,6 +11,8 @@ import {
 
 import theme from './src/global/styles/theme'
 import { DashBoard } from './src/screens/Dashboard';
+import { Register } from './src/screens/Register';
+import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
     NavigationBar.setBackgroundColorAsync(theme.colors.background);
@@ -29,7 +31,7 @@ export default function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <DashBoard/>
+            <Register/>
         </ThemeProvider>
     )
 }
