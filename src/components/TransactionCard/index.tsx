@@ -1,4 +1,5 @@
 import React from 'react'
+import Transaction from '../../classes/Transaction';
 import { 
     Title,
     Amount,
@@ -11,25 +12,23 @@ import {
 } from './styles'
 
 interface Props {
-    type: 'income' | 'outcome';
-    title: string;
-    amount: string;
-    category: string;
-    date: string;
+    data: Transaction
 }
 
-export function TransactionCard({ type, title, amount, category, date }: Props ){
+export function TransactionCard({ data }: Props ){
     return(
         <Container>
-            <Title>{title}</Title>
-            <Amount type={type}>{type === 'outcome' ? '- ' : '' }{amount}</Amount>
+            <Title>{data.title}</Title>
+            <Amount type={data.type}>
+                {data.type === 'outcome' ? '- ' : '' }{data.amount}
+            </Amount>
 
             <Footer>
                 <Category>
                     <Icon name='dollar-sign'/>
-                    <CategoryName>{category}</CategoryName>
+                    <CategoryName>{data.category.name}</CategoryName>
                 </Category>
-                <Date>{date}</Date>
+                <Date>{data.date}</Date>
             </Footer>
         </Container>
     )

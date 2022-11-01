@@ -1,4 +1,6 @@
 import React from 'react'
+import Category from '../../classes/Category';
+import Transaction from '../../classes/Transaction';
 import { HighlightCard } from '../../components/HighlightCard'
 import { TransactionCard } from '../../components/TransactionCard'
 
@@ -14,10 +16,35 @@ import {
     Power,
     HighlightCards,
     Transactions,
-    Title
+    Title,
+    TransactionList
 } from './styles'
 
 export function DashBoard(){
+    const data: Transaction[] = [
+        new Transaction(
+            '1',
+            'income',
+            'Desenvolvimento de Site',
+            'R$ 12.000,00',
+            new Category('Vendas', 'dollar-sign'),
+            '13/04/2020'),
+        new Transaction(
+            '2',
+            'outcome',
+            'Desenvolvimento de Site',
+            'R$ 12.000,00',
+            new Category('Vendas', 'dollar-sign'),
+            '13/04/2020'),
+        new Transaction(
+            '3',
+            'income',
+            'Desenvolvimento de Site',
+            'R$ 12.000,00',
+            new Category('Vendas', 'dollar-sign'),
+            '13/04/2020') 
+    ];
+
     return (
         <Container>
             <Header>
@@ -54,28 +81,14 @@ export function DashBoard(){
 
             <Transactions>
                 <Title>Listagem</Title>
-                <TransactionCard
-                    type='income'
-                    title='Desenvolvimento de Site'
-                    amount='R$ 12.000,00'
-                    category='Vendas'
-                    date='13/04/2020'
+                
+                <TransactionList<any>
+                    data={data}
+                    keyExtrator={(item: Transaction) => item.id}
+                    renderItem={({ item }: { item: Transaction }) => <TransactionCard data={item}/>}
                 />
-                <TransactionCard
-                    type='outcome'
-                    title='Desenvolvimento de Site'
-                    amount='R$ 12.000,00'
-                    category='Vendas'
-                    date='13/04/2020'
-                />
-                <TransactionCard
-                    type='income'
-                    title='Desenvolvimento de Site'
-                    amount='R$ 12.000,00'
-                    category='Vendas'
-                    date='13/04/2020'
-                />
-            </Transactions>
+
+                </Transactions>
         </Container>
     )
 }
