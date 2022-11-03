@@ -10,6 +10,8 @@ interface CategoryProps {
 export const Container = styled.View`
     flex: 1;
     background-color: ${({ theme }) => theme.colors.background};
+    width: 90%;
+    
 `
 
 export const Header = styled.View`
@@ -61,5 +63,9 @@ export const Separator = styled.View`
 
 export const Footer = styled.View`
     width: 100%;
-    padding: 24px;
+`
+
+export const CategoryList = styled.View`
+    flex: 1;
+    padding: ${RFValue(24)}px;
 `

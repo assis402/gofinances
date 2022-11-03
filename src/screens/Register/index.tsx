@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal } from 'react-native'
+import { Modal, View } from 'react-native'
 import { Button } from '../../components/Forms/Button'
 import { CategorySelectButton } from '../../components/Forms/CategorySelectButton'
 import { Input } from '../../components/Forms/Input'
@@ -37,43 +37,50 @@ export function Register(){
     }
 
     return (
-        <Container>
-            <Header>
-                <Title>Cadastro</Title>
-            </Header>
-            <Form>
-                <Fields>
-                    <Input placeholder='Nome'/>
-                    <Input placeholder='Preço'/>
+        <>
+            <Container>
+                <Header>
+                    <Title>Cadastro</Title>
+                </Header>
+                <Form>
+                    <Fields>
+                        <Input placeholder='Nome'/>
+                        <Input placeholder='Preço'/>
 
-                    <Buttons>
-                        <TransactionTypeButton 
-                            type='income'
-                            onPress={() => handleTransactionTypeSelect('income')}
-                            isActive={transactionType === 'income'}
-                        />
-                        <TransactionTypeButton 
-                            type='outcome'
-                            onPress={() => handleTransactionTypeSelect('outcome')}
-                            isActive={transactionType === 'outcome'}
-                        />
-                    </Buttons>
+                        <Buttons>
+                            <TransactionTypeButton 
+                                type='income'
+                                onPress={() => handleTransactionTypeSelect('income')}
+                                isActive={transactionType === 'income'}
+                            />
+                            <TransactionTypeButton 
+                                type='outcome'
+                                onPress={() => handleTransactionTypeSelect('outcome')}
+                                isActive={transactionType === 'outcome'}
+                            />
+                        </Buttons>
 
-                    <CategorySelectButton 
-                        title={category.name}
-                        onPress={handleOpenSelectCategoryModal}
+                        <CategorySelectButton 
+                            title={category.name}
+                            onPress={handleOpenSelectCategoryModal}
+                        />
+                    </Fields>
+
+                    <Button title='Enviar'/>
+                </Form>
+            </Container>
+            <View>
+                <Modal visible={categoryModalOpen}
+                    transparent
+                    animationType='slide'
+                >
+                    <CategorySelect
+                        category={category}
+                        setCategory={setCategory}
+                        closeSelectCategory={handleCloseSelectCategoryModal}
                     />
-                </Fields>
-
-                <Button title='Enviar'/>
-            </Form>
-            <Modal visible={categoryModalOpen}>
-                <CategorySelect
-                    category={category}
-                    setCategory={setCategory}
-                    closeSelectCategory={handleCloseSelectCategoryModal}
-                />
-            </Modal>
-        </Container>
+                </Modal>
+            </View>
+        </>
     )
 }
