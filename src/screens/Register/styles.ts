@@ -38,6 +38,7 @@ export const Fields = styled.View`
 
 export const Buttons = styled.View`
     margin-top: 8px;
+    margin-bottom: 16px;
     flex-direction: row;
     justify-content: space-between;
 `
