@@ -2,28 +2,29 @@ import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons'
 import theme from '../../global/styles/theme';
+import { BlurView } from '@react-native-community/blur';
 
 interface CategoryProps {
     isActive: boolean;
 }
 
 export const Container = styled.View`
-    flex: 1;
-    background-color: ${({ theme }) => theme.colors.background};
-    width: 90%;
     
 `
 
-export const Header = styled.View`
-    width: 100%;
-    height: ${RFPercentage(17)}px;
-    background-color: ${({ theme }) => theme.colors.primary};
+export const InternalModal =  styled.View`
+    background-color: ${({ theme }) => theme.colors.background};
+    width: 80%;
+    height: 70%;
+    padding: 25px;
+    border-radius: 5px;
+`
 
+export const ExternalModal = styled.View`
+    flex: 1;
     justify-content: center;
-    align-items: flex-end;
-    flex-direction: row;
-
-    padding-bottom: 16px;
+    align-items: center;
+    background-color: ${({ theme }) => theme.colors.background_modal};
 `
 
 export const Title = styled.Text`
@@ -32,26 +33,38 @@ export const Title = styled.Text`
     color: ${({ theme }) => theme.colors.shape};
 `
 
-export const Category = styled.TouchableOpacity<CategoryProps>`
+export const Category = styled.TouchableOpacity`
     width: 100%;
     padding: ${RFValue(15)}px;
     flex-direction: row;
     align-items: center;
+`
 
-    background-color: ${({ isActive }) => 
-        isActive ? theme.colors.secondary_light : theme.colors.background
+export const Icon = styled(Feather)<CategoryProps>`
+    font-size: ${RFValue(20)}px;
+    margin-right: 16px;
+    color: ${({ theme }) => theme.colors.title};
+
+    opacity: ${({ isActive }) => 
+        isActive ? 1 : 0.6
+    };
+
+    font-family: ${({ isActive, theme }) => 
+        isActive ? theme.fonts.medium : theme.fonts.regular
     };
 `
 
-export const Icon = styled(Feather)`
-    font-size: ${RFValue(20)}px;
-    margin-right: 16px;
-`
-
-export const Name = styled.Text`
-    font-family: ${({theme}) => theme.fonts.regular};
+export const Name = styled.Text<CategoryProps>`
     font-size: ${RFValue(14)}px;
     color: ${({ theme }) => theme.colors.title};
+
+    opacity: ${({ isActive }) => 
+        isActive ? 1 : 0.6
+    };
+
+    font-family: ${({ isActive, theme }) => 
+        isActive ? theme.fonts.medium : theme.fonts.regular
+    };
 `
 
 export const Separator = styled.View`
@@ -62,10 +75,5 @@ export const Separator = styled.View`
 `
 
 export const Footer = styled.View`
-    width: 100%;
-`
 
-export const CategoryList = styled.View`
-    flex: 1;
-    padding: ${RFValue(24)}px;
 `

@@ -3,8 +3,11 @@ import { Modal, View } from 'react-native'
 import { Button } from '../../components/Forms/Button'
 import { CategorySelectButton } from '../../components/Forms/CategorySelectButton'
 import { Input } from '../../components/Forms/Input'
+import { InputForm } from '../../components/Forms/InputForm'
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton'
-import { CategorySelect } from '../CategorySelect'
+import { CategorySelectModal } from '../../modals/CategorySelectModal'
+
+import { useForm } from 'react-hook-form'
 
 import {
     Buttons,
@@ -15,6 +18,11 @@ import {
     Title,
 } from './styles'
 
+interface FormData {
+    name: string;
+    amount: string;
+}
+
 export function Register(){
     const [transactionType, setTransactionType] = useState('')
     const [categoryModalOpen, setCategoryModalOpen] = useState(false)
@@ -24,6 +32,11 @@ export function Register(){
         name: 'Categoria',
     })
     
+    const {
+        control,
+        handleSubmit
+    } = useForm();
+
     function handleTransactionTypeSelect(type: 'income' | 'outcome'){
         setTransactionType(type)
     }
@@ -36,6 +49,17 @@ export function Register(){
         setCategoryModalOpen(true)
     }
 
+    function handleRegister(form: FormData){
+        const data = {
+            name: form.name,
+            amount: form.amount,
+            transactionType,
+            category: category.key
+        }
+
+        console.log(data)
+    }
+
     return (
         <>
             <Container>
@@ -44,8 +68,8 @@ export function Register(){
                 </Header>
                 <Form>
                     <Fields>
-                        <Input placeholder='Nome'/>
-                        <Input placeholder='Preço'/>
+                        <InputForm name='name' control={control} placeholder='Nome'/>
+                        <InputForm name='amount' control={control} placeholder='Preço'/>
 
                         <Buttons>
                             <TransactionTypeButton 
@@ -66,21 +90,15 @@ export function Register(){
                         />
                     </Fields>
 
-                    <Button title='Enviar'/>
+                    <Button title='Enviar' onPress={handleSubmit(handleRegister)}/>
                 </Form>
             </Container>
-            <View>
-                <Modal visible={categoryModalOpen}
-                    transparent
-                    animationType='slide'
-                >
-                    <CategorySelect
-                        category={category}
-                        setCategory={setCategory}
-                        closeSelectCategory={handleCloseSelectCategoryModal}
-                    />
-                </Modal>
-            </View>
+            <CategorySelectModal
+                category={category}
+                setCategory={setCategory}
+                closeSelectCategory={handleCloseSelectCategoryModal}
+                categoryModalIsOpen={categoryModalOpen}
+            />
         </>
     )
 }

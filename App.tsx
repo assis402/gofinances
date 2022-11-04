@@ -15,10 +15,6 @@ import { Register } from './src/screens/Register';
 import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
-    NavigationBar.setBackgroundColorAsync(theme.colors.background);
-    NavigationBar.setBorderColorAsync(theme.colors.background);
-    NavigationBar.setButtonStyleAsync('dark');
-
     const [fontsLoaded] = useFonts({
         Poppins_400Regular,
         Poppins_500Medium,

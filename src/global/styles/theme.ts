@@ -16,6 +16,7 @@ export default {
         text_light: '#969CB2',
         text: '#000000',
         background: '#F0F2F5',
+        background_modal: 'rgba(0, 0, 0, 0.5)',
 
         button_border: 'rgba(150, 156, 178, 0.2)'
     },
