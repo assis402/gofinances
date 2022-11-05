@@ -1,4 +1,5 @@
 import React from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import * as NavigationBar from 'expo-navigation-bar';
 import { ThemeProvider } from 'styled-components'
 import AppLoading from 'expo-app-loading';
@@ -10,9 +11,9 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import theme from './src/global/styles/theme'
-import { DashBoard } from './src/screens/Dashboard';
-import { Register } from './src/screens/Register';
-import { StatusBar } from 'expo-status-bar';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { AppRoutes } from './src/routes/app.routes'
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -26,8 +27,12 @@ export default function App() {
     }
 
     return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider theme={theme}>
-            <Register/>
+            <NavigationContainer>
+                <AppRoutes/>
+            </NavigationContainer>
         </ThemeProvider>
+    </GestureHandlerRootView>
     )
 }

@@ -66,7 +66,7 @@ export function Register(){
         if (!transactionType)
             return Alert.alert('Selecione o tipo da transação')
 
-        if (category.key !== 'category')
+        if (category.key === 'category')
             return Alert.alert('Selecione a categoria da transação')
 
         const result = {
@@ -93,12 +93,14 @@ export function Register(){
                             placeholder='Nome'
                             autoCapitalize='sentences'
                             autoCorrect={false}
+                            error={errors.name && errors.name.message}
                         />
                         <InputForm 
                             name='amount' 
                             control={control}  
                             placeholder='Preço'
                             keyboardType='numeric'
+                            error={errors.amount && errors.amount.message}
                         />
 
                         <Buttons>

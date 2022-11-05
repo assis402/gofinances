@@ -17,7 +17,7 @@ import {
     HighlightCards,
     Transactions,
     Title,
-    TransactionList
+    TransactionList,
 } from './styles'
 
 export function DashBoard(){
