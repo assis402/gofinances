@@ -4,9 +4,14 @@ import { Input } from '../Input';
 import { TextInputProps } from "react-native";
 import { Control, Controller } from "react-hook-form";
 
-interface Props extends TextInputProps {
-    control: Control;
+interface FormData {
     name: string;
+    amount: string;
+}
+
+interface Props extends TextInputProps {
+    control: Control<FormData>;
+    name: 'name' | 'amount';
 }
 
 export function InputForm({control, name, ...rest}: Props){

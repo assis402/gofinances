@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Modal, View } from 'react-native'
+import { TouchableWithoutFeedback, Keyboard, Alert } from 'react-native'
 import { Button } from '../../components/Forms/Button'
 import { CategorySelectButton } from '../../components/Forms/CategorySelectButton'
-import { Input } from '../../components/Forms/Input'
 import { InputForm } from '../../components/Forms/InputForm'
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton'
 import { CategorySelectModal } from '../../modals/CategorySelectModal'
 
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -23,6 +24,15 @@ interface FormData {
     amount: string;
 }
 
+const schema = Yup.object().shape({
+    name: Yup.string().required('Nome é obrigatório'),
+    amount: Yup
+        .number()
+        .typeError('Informe um valor numérico')
+        .positive('O valor não pode ser negativo')
+        .required('O valor é obrigatório')
+})
+
 export function Register(){
     const [transactionType, setTransactionType] = useState('')
     const [categoryModalOpen, setCategoryModalOpen] = useState(false)
@@ -34,8 +44,11 @@ export function Register(){
     
     const {
         control,
-        handleSubmit
-    } = useForm();
+        handleSubmit,
+        formState: { errors }
+    } = useForm<FormData>({
+        resolver: yupResolver(schema)
+    });
 
     function handleTransactionTypeSelect(type: 'income' | 'outcome'){
         setTransactionType(type)
@@ -49,27 +62,44 @@ export function Register(){
         setCategoryModalOpen(true)
     }
 
-    function handleRegister(form: FormData){
-        const data = {
+    function handleRegister(form: FormData) {
+        if (!transactionType)
+            return Alert.alert('Selecione o tipo da transação')
+
+        if (category.key !== 'category')
+            return Alert.alert('Selecione a categoria da transação')
+
+        const result = {
             name: form.name,
             amount: form.amount,
             transactionType,
             category: category.key
         }
 
-        console.log(data)
+        console.log(result)
     }
 
     return (
-        <>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Container>
                 <Header>
                     <Title>Cadastro</Title>
                 </Header>
                 <Form>
                     <Fields>
-                        <InputForm name='name' control={control} placeholder='Nome'/>
-                        <InputForm name='amount' control={control} placeholder='Preço'/>
+                        <InputForm 
+                            name='name' 
+                            control={control} 
+                            placeholder='Nome'
+                            autoCapitalize='sentences'
+                            autoCorrect={false}
+                        />
+                        <InputForm 
+                            name='amount' 
+                            control={control}  
+                            placeholder='Preço'
+                            keyboardType='numeric'
+                        />
 
                         <Buttons>
                             <TransactionTypeButton 
@@ -92,13 +122,13 @@ export function Register(){
 
                     <Button title='Enviar' onPress={handleSubmit(handleRegister)}/>
                 </Form>
+                <CategorySelectModal
+                    category={category}
+                    setCategory={setCategory}
+                    closeSelectCategory={handleCloseSelectCategoryModal}
+                    categoryModalIsOpen={categoryModalOpen}
+                />
             </Container>
-            <CategorySelectModal
-                category={category}
-                setCategory={setCategory}
-                closeSelectCategory={handleCloseSelectCategoryModal}
-                categoryModalIsOpen={categoryModalOpen}
-            />
-        </>
+        </TouchableWithoutFeedback>
     )
 }
