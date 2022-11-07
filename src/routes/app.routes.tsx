@@ -24,6 +24,7 @@ export function AppRoutes(){
                     height: 80,
                     paddingVertical: Platform.OS === 'ios' ? 20 : 0,
                     paddingHorizontal: 20,
+                    // position: 'absolute'
                 },
                 tabBarLabelStyle: {
                     lineHeight: 19,
@@ -32,6 +33,7 @@ export function AppRoutes(){
                 tabBarIconStyle: {
                     width: 14
                 },
+                // tabBarHideOnKeyboard: true
             }}
         >
             <Screen 

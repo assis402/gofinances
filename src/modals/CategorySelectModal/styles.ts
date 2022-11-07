@@ -33,7 +33,9 @@ export const Title = styled.Text`
     color: ${({ theme }) => theme.colors.shape};
 `
 
-export const Category = styled.TouchableOpacity`
+export const CategoryItem = styled.TouchableOpacity.attrs({
+    activeOpacity: 0.4
+})`
     width: 100%;
     padding: ${RFValue(15)}px;
     flex-direction: row;
@@ -50,12 +52,13 @@ export const Icon = styled(Feather)<CategoryProps>`
     };
 
     font-family: ${({ isActive, theme }) => 
-        isActive ? theme.fonts.medium : theme.fonts.regular
+        isActive ? theme.fonts.bold : theme.fonts.regular
     };
 `
 
 export const Name = styled.Text<CategoryProps>`
     font-size: ${RFValue(14)}px;
+    line-height: 26px;
     color: ${({ theme }) => theme.colors.title};
 
     opacity: ${({ isActive }) => 
@@ -63,7 +66,7 @@ export const Name = styled.Text<CategoryProps>`
     };
 
     font-family: ${({ isActive, theme }) => 
-        isActive ? theme.fonts.medium : theme.fonts.regular
+        isActive ? theme.fonts.bold : theme.fonts.regular
     };
 `
 

@@ -12,7 +12,7 @@ import {
 
 interface Props {
     type: 'income' | 'outcome' | 'balance';
-    amount: string;
+    amount: Number;
     lastTransaction: string;
 }
 
@@ -20,6 +20,12 @@ const title = {
     income: 'Entradas',
     outcome: 'Saídas',
     balance: 'Saldo'
+}
+
+const typeValue = {
+    income: 'entrada',
+    outcome: 'saída',
+    balance: 'transação'
 }
 
 const icon = {
@@ -37,7 +43,9 @@ export function HighlightCard({ type, amount, lastTransaction }: Props){
             </Header>
             <Content>
                 <Amount type={type}>{amount}</Amount>
-                <LastTransaction type={type}>{lastTransaction}</LastTransaction>
+                {lastTransaction && 
+                    <LastTransaction type={type}>{'Última' + typeValue[type] + 'dia ' + lastTransaction}</LastTransaction>
+                }
             </Content>
         </Container>
     )

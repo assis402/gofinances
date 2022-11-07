@@ -1,18 +1,12 @@
-import AppLoading from "expo-app-loading";
 import React from "react";
 import { FlatList, Modal } from "react-native";
 import { Button } from "../../components/Forms/Button";
 import { categories } from "../../utils/categories";
-import { Category, Container, ExternalModal, Footer, Icon, InternalModal, Name, Separator, Title } from "./styles";
-
-interface Category {
-    key: string;
-    name: string;
-}
+import { CategoryItem, Container, ExternalModal, Footer, Icon, InternalModal, Name, Separator, Title } from "./styles";
 
 interface Props {
-    category: Category;
-    setCategory: (category: Category) => void;
+    category: string;
+    setCategory: (category: string) => void;
     closeSelectCategory: () => void;
     categoryModalIsOpen: boolean;
 }
@@ -23,8 +17,8 @@ export function CategorySelectModal({
     closeSelectCategory,
     categoryModalIsOpen
 } : Props){
-
-    function handleCategorySelect(category: Category){
+    
+    function handleCategorySelect(category: string){
         setCategory(category);
     }
 
@@ -43,22 +37,20 @@ export function CategorySelectModal({
                             style={{ flex: 1, width: '100%' }}
                             keyExtractor={(item) => item.key}
                             renderItem={({ item }) => (
-                                <Category
-                                    onPress={() => handleCategorySelect(item)}
-                                    isActive={category.key === item.key}
+                                <CategoryItem
+                                    onPress={() => handleCategorySelect(item.name)}
+                                    isActive={category === item.name}
                                 >
-                                    <Icon name={item.icon} isActive={category.key === item.key}/>
-                                    <Name isActive={category.key === item.key}>{item.name}</Name>
-                                </Category>
+                                    <Icon name={item.icon} isActive={category === item.name}/>
+                                    <Name isActive={category === item.name}>{item.name}</Name>
+                                </CategoryItem>
                             )}
                             ItemSeparatorComponent={() => <Separator/>}
                         />
-                        <Footer>
-                            <Button 
-                                title="Selecionar"
-                                onPress={closeSelectCategory}
-                            />
-                        </Footer>
+                        <Button 
+                            title="Selecionar"
+                            onPress={closeSelectCategory}
+                        />
                     </InternalModal>
                 </ExternalModal>
             </Modal>

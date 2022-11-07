@@ -1,5 +1,6 @@
 import React from 'react'
-import Transaction from '../../classes/Transaction';
+import { Transaction }  from '../../classes/Transaction';
+import { categories } from "../../utils/categories";
 import { 
     Title,
     Amount,
@@ -15,7 +16,9 @@ interface Props {
     data: Transaction
 }
 
-export function TransactionCard({ data }: Props ){
+export function TransactionCard({ data }: Props ) {
+    const category = categories.find(x => x.name === data.category)
+
     return(
         <Container>
             <Title>{data.title}</Title>
@@ -25,10 +28,10 @@ export function TransactionCard({ data }: Props ){
 
             <Footer>
                 <Category>
-                    <Icon name='dollar-sign'/>
-                    <CategoryName>{data.category.name}</CategoryName>
+                    <Icon name={category?.icon}/>
+                    <CategoryName>{category?.name}</CategoryName>
                 </Category>
-                <Date>{data.date}</Date>
+                <Date>{data.formattedDate}</Date>
             </Footer>
         </Container>
     )

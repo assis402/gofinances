@@ -5,27 +5,32 @@ import { CategorySelectButton } from '../../components/Forms/CategorySelectButto
 import { InputForm } from '../../components/Forms/InputForm'
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton'
 import { CategorySelectModal } from '../../modals/CategorySelectModal'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
+import { showMessage } from "react-native-flash-message";
 
 import {
     Buttons,
     Container,
     Fields,
+    Footer,
     Form,
     Header,
     Title,
 } from './styles'
+import { Transaction, TransactionFactory } from '../../classes/Transaction'
 
 interface FormData {
-    name: string;
+    title: string;
     amount: string;
 }
 
 const schema = Yup.object().shape({
-    name: Yup.string().required('Nome é obrigatório'),
+    title: Yup.string().required('Nome é obrigatório'),
     amount: Yup
         .number()
         .typeError('Informe um valor numérico')
@@ -37,15 +42,13 @@ export function Register(){
     const [transactionType, setTransactionType] = useState('')
     const [categoryModalOpen, setCategoryModalOpen] = useState(false)
 
-    const [category, setCategory] = useState({
-        key: 'category',
-        name: 'Categoria',
-    })
+    const [category, setCategory] = useState('Categoria')
     
     const {
         control,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        reset
     } = useForm<FormData>({
         resolver: yupResolver(schema)
     });
@@ -62,75 +65,109 @@ export function Register(){
         setCategoryModalOpen(true)
     }
 
-    function handleRegister(form: FormData) {
+    async function handleRegister(form: FormData) {
         if (!transactionType)
             return Alert.alert('Selecione o tipo da transação')
 
-        if (category.key === 'category')
+        if (category === 'Categoria')
             return Alert.alert('Selecione a categoria da transação')
 
-        const result = {
-            name: form.name,
-            amount: form.amount,
+        const newTransaction = TransactionFactory.new(
             transactionType,
-            category: category.key
-        }
+            form.title,
+            form.amount,
+            category,
+        )
 
-        console.log(result)
+        try {
+            const dataKey = '@gofinances:transactions'
+
+            const data = await AsyncStorage.getItem(dataKey)
+            const currentData = data ? JSON.parse(data) as Transaction[] : []
+
+            const dataFormatted = [
+                ...currentData, newTransaction
+            ]
+
+            await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted))
+
+            reset()
+            setTransactionType('')
+            setCategory('Categoria')
+
+            showMessage({
+                message: "Transação adicionada!",
+                type: "success",
+                icon: "success",
+                style: {
+                    paddingTop: 50
+                }
+              });
+        } catch (error) {
+            console.log(error);
+            Alert.alert("Não foi possível salvar");
+        }
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Container>
-                <Header>
-                    <Title>Cadastro</Title>
-                </Header>
-                <Form>
-                    <Fields>
-                        <InputForm 
-                            name='name' 
-                            control={control} 
-                            placeholder='Nome'
-                            autoCapitalize='sentences'
-                            autoCorrect={false}
-                            error={errors.name && errors.name.message}
-                        />
-                        <InputForm 
-                            name='amount' 
-                            control={control}  
-                            placeholder='Preço'
-                            keyboardType='numeric'
-                            error={errors.amount && errors.amount.message}
-                        />
-
-                        <Buttons>
-                            <TransactionTypeButton 
-                                type='income'
-                                onPress={() => handleTransactionTypeSelect('income')}
-                                isActive={transactionType === 'income'}
+        <KeyboardAwareScrollView
+            // contentContainerStyle={{
+            //     flex: 1
+            // }}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Container>
+                    <Header>
+                        <Title>Cadastro</Title>
+                    </Header>
+                    <Form>
+                        <Fields>
+                            <InputForm 
+                                name='title' 
+                                control={control} 
+                                placeholder='Identificação'
+                                autoCapitalize='sentences'
+                                autoCorrect={false}
+                                error={errors.title && errors.title.message}
                             />
-                            <TransactionTypeButton 
-                                type='outcome'
-                                onPress={() => handleTransactionTypeSelect('outcome')}
-                                isActive={transactionType === 'outcome'}
+                            <InputForm 
+                                name='amount' 
+                                control={control}  
+                                placeholder='Preço'
+                                keyboardType='numeric'
+                                error={errors.amount && errors.amount.message}
                             />
-                        </Buttons>
 
-                        <CategorySelectButton 
-                            title={category.name}
-                            onPress={handleOpenSelectCategoryModal}
-                        />
-                    </Fields>
+                            <Buttons>
+                                <TransactionTypeButton 
+                                    type='income'
+                                    onPress={() => handleTransactionTypeSelect('income')}
+                                    isActive={transactionType === 'income'}
+                                />
+                                <TransactionTypeButton 
+                                    type='outcome'
+                                    onPress={() => handleTransactionTypeSelect('outcome')}
+                                    isActive={transactionType === 'outcome'}
+                                />
+                            </Buttons>
 
-                    <Button title='Enviar' onPress={handleSubmit(handleRegister)}/>
-                </Form>
-                <CategorySelectModal
-                    category={category}
-                    setCategory={setCategory}
-                    closeSelectCategory={handleCloseSelectCategoryModal}
-                    categoryModalIsOpen={categoryModalOpen}
-                />
-            </Container>
-        </TouchableWithoutFeedback>
+                            <CategorySelectButton 
+                                title={category}
+                                onPress={handleOpenSelectCategoryModal}
+                            />
+                        </Fields>
+                        <Footer>
+                            <Button title='Enviar' onPress={handleSubmit(handleRegister)}/>
+                        </Footer>
+                    </Form>
+                    <CategorySelectModal
+                        category={category}
+                        setCategory={setCategory}
+                        closeSelectCategory={handleCloseSelectCategoryModal}
+                        categoryModalIsOpen={categoryModalOpen}
+                    />
+                </Container>
+            </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
     )
 }

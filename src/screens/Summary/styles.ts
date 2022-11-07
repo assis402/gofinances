@@ -8,7 +8,7 @@ export const Container = styled.View`
 
 export const Header = styled.View`
     width: 100%;
-    height: ${RFPercentage(17)}px;
+    height: ${RFValue(113)}px;
     background-color: ${({ theme }) => theme.colors.primary};
 
     justify-content: center;

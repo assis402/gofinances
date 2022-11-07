@@ -5,13 +5,13 @@ import { TextInputProps } from "react-native";
 import { Control, Controller } from "react-hook-form";
 
 interface FormData {
-    name: string;
+    title: string;
     amount: string;
 }
 
 interface Props extends TextInputProps {
     control: Control<FormData>;
-    name: 'name' | 'amount';
+    name: 'title' | 'amount';
     error?: string;
 }
 
