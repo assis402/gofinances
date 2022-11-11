@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 import { ActivityIndicator } from 'react-native'
 import { useTheme } from 'styled-components'
+import { formatDateToHighlight } from '../../utils/helper'
 
 import {
     Container,
@@ -21,18 +22,15 @@ import {
     Transactions,
     Title,
     TransactionList,
-    LoadContainer
+    LoadContainer,
+    NoTransactions,
+    NoTransactionsTitle,
+    NoTransactionsIcon
 } from './styles'
 
 interface HighlightProps {
     total: Number,
     lastTransaction: string
-}
-
-interface HighlightData {
-    income: HighlightProps,
-    outcome: HighlightProps,
-    sum: HighlightProps
 }
 
 export function DashBoard(){
@@ -41,15 +39,11 @@ export function DashBoard(){
         lastTransaction: ''
     }
 
-    const defaultHighlightData = {
-        income: defaultHighlightProps,
-        outcome: defaultHighlightProps,
-        sum: defaultHighlightProps
-    }
-
     const [isLoading, setIsLoading] = useState(true);
     const [transactions, setTransactions] = useState<Transaction[]>([])
-    const [highlightData, setHighlightData] = useState<HighlightData>(defaultHighlightData as HighlightData);
+    const [incomeHighlightData, setIncomeHighlightData] = useState<HighlightProps>(defaultHighlightProps as HighlightProps);
+    const [outcomeHighlightData, setOutcomeHighlightData] = useState<HighlightProps>(defaultHighlightProps as HighlightProps);
+    const [sumHighlightData, setSumHighlightData] = useState<HighlightProps>(defaultHighlightProps as HighlightProps);
 
     const theme = useTheme();
 
@@ -57,11 +51,13 @@ export function DashBoard(){
         const dataKey = '@gofinances:transactions'
         //await AsyncStorage.clear()
         const response = await AsyncStorage.getItem(dataKey);
-        let transactions = response ? JSON.parse(response) as Transaction[] : [];
-        transactions = transactions.sort().reverse()
+        let dataTransactions = response ? JSON.parse(response) as Transaction[] : [];
+        dataTransactions = dataTransactions.sort().reverse()
 
         const incomeTransactions = transactions.filter(x => x.type === 'income').sort().reverse()
         const outcomeTransactions = transactions.filter(x => x.type === 'outcome').sort().reverse()
+        
+        console.log(outcomeTransactions);
 
         const incomeTotal = incomeTransactions.reduce((accumulator, object) => {
             return accumulator + object.amount;
@@ -85,21 +81,23 @@ export function DashBoard(){
         //     return
         // });
 
-        if (transactions.length > 0){
-            setTransactions(transactions);
-            setHighlightData({
-                income: {
-                    total: incomeTotal,
-                    lastTransaction: incomeTransactions[0].formattedDate
-                },
-                outcome: {
-                    total: outcomeTotal,
-                    lastTransaction: outcomeTransactions[0].formattedDate
-                },
-                sum: {
-                    total: incomeTotal - outcomeTotal,
-                    lastTransaction: transactions[0].formattedDate
-                }
+        if (dataTransactions.length > 0){
+            setTransactions(dataTransactions);
+
+            
+            incomeTotal > 0 && setIncomeHighlightData({
+                total: incomeTotal,
+                lastTransaction: formatDateToHighlight(incomeTransactions[0].date)
+            })
+            
+            outcomeTotal > 0 && setOutcomeHighlightData({
+                total: outcomeTotal,
+                lastTransaction: formatDateToHighlight(outcomeTransactions[0].date)
+            })
+
+            setSumHighlightData({
+                total: incomeTotal - outcomeTotal,
+                lastTransaction: ''
             })
         }
 
@@ -142,29 +140,34 @@ export function DashBoard(){
                     <HighlightCards>
                         <HighlightCard 
                             type='income' 
-                            amount={highlightData.income.total}
-                            lastTransaction={highlightData.income.lastTransaction}
+                            amount={incomeHighlightData.total}
+                            lastTransaction={incomeHighlightData.lastTransaction}
                         />
                         <HighlightCard 
                             type='outcome' 
-                            amount={highlightData.outcome.total}
-                            lastTransaction={highlightData.outcome.lastTransaction}
+                            amount={outcomeHighlightData.total}
+                            lastTransaction={outcomeHighlightData.lastTransaction}
                         />
                         <HighlightCard 
                             type='balance' 
-                            amount={highlightData.sum.total}
-                            lastTransaction={highlightData.sum.lastTransaction}
+                            amount={sumHighlightData.total}
+                            lastTransaction={sumHighlightData.lastTransaction}
                         />
                     </HighlightCards>
-
-                    <Transactions>
-                        { transactions.length > 0 && <Title>Listagem</Title> }
-                        <TransactionList<any>
-                            data={transactions}
-                            keyExtrator={(item: Transaction) => item.id}
-                            renderItem={({ item }: { item: Transaction }) => <TransactionCard data={item}/>}
-                        />
-                    </Transactions>
+                    { transactions.length === 0 ?
+                        <NoTransactions>
+                            <NoTransactionsTitle>Cadastre a sua primeira transação</NoTransactionsTitle>
+                            <NoTransactionsIcon name='mood'/>
+                        </NoTransactions> :
+                        <Transactions>
+                            { transactions.length > 0 && <Title>Listagem</Title> }
+                            <TransactionList<any>
+                                data={transactions}
+                                keyExtrator={(item: Transaction) => item.id}
+                                renderItem={({ item }: { item: Transaction }) => <TransactionCard data={item}/>}
+                            />
+                        </Transactions>
+                    }
                 </>
             }
         </Container>

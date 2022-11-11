@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatAmount } from '../../utils/helper'
 
 import {
     Amount,
@@ -42,9 +43,9 @@ export function HighlightCard({ type, amount, lastTransaction }: Props){
                 <Icon name={icon[type]} type={type}/>
             </Header>
             <Content>
-                <Amount type={type}>{amount}</Amount>
+                <Amount type={type}>{formatAmount(amount)}</Amount>
                 {lastTransaction && 
-                    <LastTransaction type={type}>{'Última' + typeValue[type] + 'dia ' + lastTransaction}</LastTransaction>
+                    <LastTransaction type={type}>{'Última ' + typeValue[type] + ' dia ' + lastTransaction}</LastTransaction>
                 }
             </Content>
         </Container>

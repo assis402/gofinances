@@ -1,6 +1,7 @@
 import React from 'react'
 import { Transaction }  from '../../classes/Transaction';
 import { categories } from "../../utils/categories";
+import { formatDate, formatAmount } from '../../utils/helper'
 import { 
     Title,
     Amount,
@@ -23,7 +24,7 @@ export function TransactionCard({ data }: Props ) {
         <Container>
             <Title>{data.title}</Title>
             <Amount type={data.type}>
-                {data.type === 'outcome' ? '- ' : '' }{data.amount}
+                {data.type === 'outcome' ? '- ' : '' }{formatAmount(data.amount)}
             </Amount>
 
             <Footer>
@@ -31,7 +32,7 @@ export function TransactionCard({ data }: Props ) {
                     <Icon name={category?.icon}/>
                     <CategoryName>{category?.name}</CategoryName>
                 </Category>
-                <Date>{data.formattedDate}</Date>
+                <Date>{formatDate(data.date)}</Date>
             </Footer>
         </Container>
     )

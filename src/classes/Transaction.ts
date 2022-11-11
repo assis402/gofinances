@@ -9,10 +9,8 @@ export class Transaction {
     type!: 'income' | 'outcome'
     title!: string
     amount!: number
-    formattedAmount!: string
     category!: string
     date!: string
-    formattedDate!: string
 }
 
 export class TransactionFactory {
@@ -26,22 +24,9 @@ export class TransactionFactory {
 
         newTransaction.id = String(uuid.v4())
         newTransaction.date = String(creationDate)
-
-        newTransaction.formattedDate = creationDate.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: '2-digit'})
-
         newTransaction.type = type as TransactionType
         newTransaction.title = title
-        newTransaction.amount = Number(amount) 
-        newTransaction.formattedAmount = new Intl.NumberFormat("pt-BR", {
-            style:'currency',
-            currency:'BRL'
-        })
-        .format(Number(amount))
-        .replace("R$", "R$\u0020")
-        
+        newTransaction.amount = Number(amount)
         newTransaction.category = category
 
         return newTransaction;

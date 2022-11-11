@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize'
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { FlatList } from 'react-native';
 import { Transaction } from '../../classes/Transaction';
@@ -83,6 +83,27 @@ export const Title = styled.Text`
     font-family: ${({theme}) => theme.fonts.medium};
     color: ${({theme}) => theme.colors.title};
     margin-bottom: 16px;
+`
+
+export const NoTransactions = styled.View`
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+`
+
+export const NoTransactionsTitle = styled.Text`
+    font-family: ${({theme}) => theme.fonts.medium};
+    color: ${({theme}) => theme.colors.mood_text};
+    text-align: right;
+    font-size: ${RFValue(18)}px;
+    width: ${RFValue(180)}px;
+`
+
+export const NoTransactionsIcon = styled(MaterialIcons)`
+    color: ${({theme}) => theme.colors.mood_icon};
+    font-size: ${RFValue(70)}px;
+    margin-left: 20px;
 `
 
 export const TransactionList = styled(FlatList as new () => FlatList<Transaction>).attrs({
